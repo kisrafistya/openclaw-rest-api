@@ -1,23 +1,28 @@
-# OpenClaw Railway Template with REST API Support
-# This image is based on the original OpenClaw railway template but adds
-# an OpenAI-compatible /v1/chat/completions REST endpoint
-
-FROM ghcr.io/openclawai/openclaw:railway
+# OpenClaw Railway Wrapper with REST API Support
+# Self-contained image that downloads OpenClaw and adds REST API endpoint
+FROM node:22-bookworm
 
 WORKDIR /app
 
-# Copy the modified wrapper with REST API endpoint
-COPY src/server.js /app/src/server.js
-COPY src/setup-app.js /app/src/setup-app.js
-COPY package.json /app/package.json
+# Copy wrapper files first
+COPY package.json ./
+COPY src/ ./src/
 
-# Install wrapper dependencies  
+# Install wrapper dependencies
 RUN npm install
 
+# Install OpenClaw CLI globally
+RUN npm install -g openclaw@latest
+
+# Create necessary directories
+RUN mkdir -p /data/.openclaw /data/workspace /tmp/openclaw
+
 # Environment configuration
-ENV OPENCLAW_PUBLIC_PORT=8080
-ENV INTERNAL_GATEWAY_PORT=18789
 ENV NODE_ENV=production
+ENV PORT=8080
+ENV OPENCLAW_STATE_DIR=/data/.openclaw
+ENV OPENCLAW_WORKSPACE_DIR=/data/workspace
+ENV INTERNAL_GATEWAY_PORT=18789
 
 # The wrapper listens on 8080 and proxies to gateway on 18789
 EXPOSE 8080
