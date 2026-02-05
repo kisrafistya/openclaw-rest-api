@@ -23,6 +23,7 @@ ENV PORT=8080
 ENV OPENCLAW_STATE_DIR=/data/.openclaw
 ENV OPENCLAW_WORKSPACE_DIR=/data/workspace
 ENV INTERNAL_GATEWAY_PORT=18789
+ENV OPENCLAW_ENTRY=/usr/local/lib/node_modules/openclaw/dist/entry.js
 
 # The wrapper listens on 8080 and proxies to gateway on 18789
 EXPOSE 8080
