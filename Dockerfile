@@ -11,11 +11,14 @@ COPY src/ ./src/
 # Install wrapper dependencies
 RUN npm install
 
-# Install OpenClaw CLI globally
-RUN npm install -g openclaw@latest
+# Install OpenClaw CLI and mcporter globally
+RUN npm install -g openclaw@latest mcporter
 
 # Create necessary directories
-RUN mkdir -p /data/.openclaw /data/workspace /tmp/openclaw
+RUN mkdir -p /data/.openclaw /data/workspace /tmp/openclaw /app/config
+
+# Create mcporter config for zirodelta MCP server
+RUN echo '{"servers":{"zirodelta":{"baseUrl":"https://zdlt-mcp.up.railway.app/sse","description":"Zirodelta MCP tools","transport":"sse","headers":{}}}}' > /app/config/mcporter.json
 
 # Environment configuration
 ENV NODE_ENV=production
